@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+*, *::after, *::before {
+  box-sizing: border-box;
+}

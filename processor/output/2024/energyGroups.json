@@ -1,0 +1,30 @@
+[
+  {
+    "_id": "Renovable",
+    "type": "Renovable",
+    "lastUpdate": {
+      "$date": "2025-01-28T16:56:17.000+01:00"
+    }
+  },
+  {
+    "_id": "No-Renovable",
+    "type": "No-Renovable",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:42.000+01:00"
+    }
+  },
+  {
+    "_id": "Almacenamiento",
+    "type": "Almacenamiento",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:42.000+01:00"
+    }
+  },
+  {
+    "_id": "Demanda en b.c.",
+    "type": "Demanda",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:45.000+01:00"
+    }
+  }
+]

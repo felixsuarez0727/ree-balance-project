@@ -1,0 +1,53 @@
+services:
+  # Frontend React
+  frontend:
+    container_name: ree-balance-frontend
+    build: ./frontend
+    restart: always
+    ports:
+      - "3000:3000"  
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    environment:
+      - VITE_GRAPHQL_API_URL=http://localhost:4000/graphql
+    networks:
+      - app-network
+
+  backend:
+    container_name: ree-balance-backend
+    build: ./backend
+    restart: always
+    ports:
+      - "4000:4000"  
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://root:rootpassword@mongo:27017/?authSource=admin&dbName=ree-balance
+      - NODE_ENV=development 
+    networks:
+      - app-network
+
+  mongo:
+    container_name: ree-balance-mongodb
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"  
+    volumes:
+      - ./mongo/mongo-data:/data/db  
+      - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=rootpassword
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
