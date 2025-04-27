@@ -65,6 +65,7 @@ VITE_GRAPHQL_API_URL=http://localhost:4000/graphql
 PORT=4000
 NODE_ENV=development
 MONGO_URI=mongodb://root:rootpassword@localhost:27017/?authSource=admin&dbName=ree-balance
+REE_URI=https://apidatos.ree.es/es/datos/balance/balance-electrico?start_date={start}&end_date={end}&time_trunc=day
 ```
 
 Before running, you need to start the MongoDB container
@@ -116,7 +117,7 @@ npm run dev
 
 ## 💾 Data Model
 
-The system uses three main collections:
+The system uses four main collections:
 
 1. **energyGroups**: Represents different energy types
 
