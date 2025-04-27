@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-function getEnvVar(key: string, required = true): string {
+export function getEnvVar(key: string, required = true): string {
   const value = process.env[key];
   if (!value && required) {
     console.error(`[Env]: Environment variable ${key} is required`);
@@ -10,7 +10,7 @@ function getEnvVar(key: string, required = true): string {
   return value!;
 }
 
-function getEnvVarAsNumber(key: string, required = true): number {
+export function getEnvVarAsNumber(key: string, required = true): number {
   const value = getEnvVar(key, required);
   const parsed = parseInt(value, 10);
   if (isNaN(parsed)) {

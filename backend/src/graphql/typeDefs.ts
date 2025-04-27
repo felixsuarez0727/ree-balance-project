@@ -5,6 +5,8 @@ export const typeDefs = gql`
     id: String!
     type: String!
     lastUpdate: String!
+    totalValue: Float
+    totalPercentage: Float
     categories: [EnergyCategory]
   }
 
@@ -14,6 +16,8 @@ export const typeDefs = gql`
     groupId: String!
     color: String!
     lastUpdate: String!
+    totalValue: Float
+    totalPercentage: Float
     values: [EnergyValue]
   }
 
@@ -24,6 +28,16 @@ export const typeDefs = gql`
     percentage: Float
   }
 
+  type EnergyCategoryWithValues {
+    category: EnergyCategory
+    values: [EnergyValue]
+  }
+
+  type GroupWithCategoryValues {
+    group: EnergyGroup
+    categories: [EnergyCategoryWithValues]
+  }
+
   type Query {
     energyGroups: [EnergyGroup!]!
     energyGroup(id: String!): EnergyGroup
@@ -32,8 +46,7 @@ export const typeDefs = gql`
     categoriesByGroup(groupId: String!): [EnergyCategory]
     energyValues: [EnergyValue!]!
     valuesByCategory(categoryId: String!, from: String, to: String): [EnergyValue]
-    valuesByGroup(groupId: String!, from: String, to: String): [EnergyValue]
+    valuesByGroup(groupIds: [String!]!, from: String, to: String): [GroupWithCategoryValues]
   }
-
 
 `;

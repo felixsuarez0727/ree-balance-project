@@ -1,0 +1,191 @@
+[
+  {
+    "_id": "10288",
+    "type": "Hidráulica",
+    "groupId": "Renovable",
+    "color": "#0090d1",
+    "lastUpdate": {
+      "$date": "2025-01-28T16:56:17.000+01:00"
+    }
+  },
+  {
+    "_id": "10291",
+    "type": "Eólica",
+    "groupId": "Renovable",
+    "color": "#6fb114",
+    "lastUpdate": {
+      "$date": "2025-01-28T16:56:19.000+01:00"
+    }
+  },
+  {
+    "_id": "1458",
+    "type": "Solar fotovoltaica",
+    "groupId": "Renovable",
+    "color": "#e48500",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:44.000+01:00"
+    }
+  },
+  {
+    "_id": "1459",
+    "type": "Solar térmica",
+    "groupId": "Renovable",
+    "color": "#ff0000",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:44.000+01:00"
+    }
+  },
+  {
+    "_id": "1455",
+    "type": "Hidroeólica",
+    "groupId": "Renovable",
+    "color": "#00FFFF",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:43.000+01:00"
+    }
+  },
+  {
+    "_id": "10292",
+    "type": "Otras renovables",
+    "groupId": "Renovable",
+    "color": "#9a5cbc",
+    "lastUpdate": {
+      "$date": "2025-01-28T16:56:20.000+01:00"
+    }
+  },
+  {
+    "_id": "10295",
+    "type": "Residuos renovables",
+    "groupId": "Renovable",
+    "color": "#a0a0a0",
+    "lastUpdate": {
+      "$date": "2025-01-28T16:56:21.000+01:00"
+    }
+  },
+  {
+    "_id": "1446",
+    "type": "Nuclear",
+    "groupId": "No-Renovable",
+    "color": "#464394",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:42.000+01:00"
+    }
+  },
+  {
+    "_id": "1454",
+    "type": "Ciclo combinado",
+    "groupId": "No-Renovable",
+    "color": "#ffcc66",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:43.000+01:00"
+    }
+  },
+  {
+    "_id": "10289",
+    "type": "Carbón",
+    "groupId": "No-Renovable",
+    "color": "#993300",
+    "lastUpdate": {
+      "$date": "2025-01-28T16:56:18.000+01:00"
+    }
+  },
+  {
+    "_id": "10344",
+    "type": "Motores diésel",
+    "groupId": "No-Renovable",
+    "color": "#8DA69F",
+    "lastUpdate": {
+      "$date": "2025-01-28T16:56:18.000+01:00"
+    }
+  },
+  {
+    "_id": "1450",
+    "type": "Turbina de gas",
+    "groupId": "No-Renovable",
+    "color": "#BA0F16",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:43.000+01:00"
+    }
+  },
+  {
+    "_id": "1451",
+    "type": "Turbina de vapor",
+    "groupId": "No-Renovable",
+    "color": "#AF8E00",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:43.000+01:00"
+    }
+  },
+  {
+    "_id": "10290",
+    "type": "Fuel + Gas",
+    "groupId": "No-Renovable",
+    "color": "#ba0f16",
+    "lastUpdate": {
+      "$date": "2025-01-28T17:52:20.000+01:00"
+    }
+  },
+  {
+    "_id": "10293",
+    "type": "Cogeneración",
+    "groupId": "No-Renovable",
+    "color": "#cfa2ca",
+    "lastUpdate": {
+      "$date": "2025-01-28T16:56:21.000+01:00"
+    }
+  },
+  {
+    "_id": "10294",
+    "type": "Residuos no renovables",
+    "groupId": "No-Renovable",
+    "color": "#666666",
+    "lastUpdate": {
+      "$date": "2025-01-28T16:56:22.000+01:00"
+    }
+  },
+  {
+    "_id": "1445",
+    "type": "Turbinación bombeo",
+    "groupId": "Almacenamiento",
+    "color": "#007cf9",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:42.000+01:00"
+    }
+  },
+  {
+    "_id": "1472",
+    "type": "Consumo bombeo",
+    "groupId": "Almacenamiento",
+    "color": "#4f81bd",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:45.000+01:00"
+    }
+  },
+  {
+    "_id": "2180",
+    "type": "Entrega batería",
+    "groupId": "Almacenamiento",
+    "color": "#03738b",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:46.000+01:00"
+    }
+  },
+  {
+    "_id": "2181",
+    "type": "Carga batería",
+    "groupId": "Almacenamiento",
+    "color": "#08b2ad",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:46.000+01:00"
+    }
+  },
+  {
+    "_id": "1474",
+    "type": "Saldo I. internacionales",
+    "groupId": "Demanda en b.c.",
+    "color": "#00608a",
+    "lastUpdate": {
+      "$date": "2025-01-29T08:56:45.000+01:00"
+    }
+  }
+]

@@ -1,8 +1,8 @@
-import { IResolvers } from '@graphql-tools/utils';
-import { Db } from 'mongodb';
-import EnergyGroup from './models/EnergyGroup';
-import EnergyCategory from './models/EnergyCategory';
-import EnergyValue from './models/EnergyValue';
+import { IResolvers } from "@graphql-tools/utils";
+import { Db } from "mongodb";
+import EnergyGroup from "./models/EnergyGroup";
+import EnergyCategory from "./models/EnergyCategory";
+import EnergyValue from "./models/EnergyValue";
 
 interface Context {
   db: Db;
@@ -11,10 +11,10 @@ interface Context {
 function formatDocumentForGraphQL(doc: any) {
   if (!doc) return null;
   const result = {
-    ...doc.toObject ? doc.toObject() : doc,
-    id: doc._id ? doc._id.toString() : null
+    ...(doc.toObject ? doc.toObject() : doc),
+    id: doc._id ? doc._id.toString() : null,
   };
-  
+
   // Formatear las fechas
   if (result.lastUpdate instanceof Date) {
     result.lastUpdate = result.lastUpdate.toISOString();
@@ -22,7 +22,7 @@ function formatDocumentForGraphQL(doc: any) {
   if (result.datetime instanceof Date) {
     result.datetime = result.datetime.toISOString();
   }
-  
+
   return result;
 }
 
@@ -52,54 +52,143 @@ export const resolvers: IResolvers<any, Context> = {
       const values = await EnergyValue.find().lean();
       return values.map(formatDocumentForGraphQL);
     },
-    valuesByCategory: async (_: any, { categoryId, from, to }: { categoryId: string, from?: string, to?: string }) => {
+    valuesByCategory: async (
+      _: any,
+      {
+        categoryId,
+        from,
+        to,
+      }: { categoryId: string; from?: string; to?: string }
+    ) => {
       const filter: any = { categoryId };
       if (from || to) {
         filter.datetime = {};
         if (from) filter.datetime.$gte = new Date(from);
         if (to) filter.datetime.$lte = new Date(to);
       }
-      const values = await EnergyValue.find(filter).sort({ datetime: 1 }).lean();
+      const values = await EnergyValue.find(filter)
+        .sort({ datetime: 1 })
+        .lean();
       return values.map(formatDocumentForGraphQL);
     },
-    valuesByGroup: async (_: any, { groupId, from, to }: { groupId: string, from?: string, to?: string }) => {
+    valuesByGroup: async (
+      _: any,
+      args: { groupIds: string[]; from?: string; to?: string }
+    ) => {
       const dateFilter: any = {};
-      if (from) dateFilter.$gte = new Date(from);
-      if (to) dateFilter.$lte = new Date(to);
+      if (args.from) dateFilter.$gte = new Date(args.from);
+      if (args.to) dateFilter.$lte = new Date(args.to);
+   
+      const groups = await EnergyGroup.find({ _id: { $in: args.groupIds } });
 
-      const results = await EnergyCategory.aggregate([
-        { $match: { groupId } },
-        {
-          $lookup: {
-            from: 'energyValues',
-            let: { categoryId: '$_id' },
-            pipeline: [
-              { $match: { $expr: { $eq: ['$categoryId', '$$categoryId'] } } },
-              ...(from || to ? [{ $match: { datetime: dateFilter } }] : []),
-              { $sort: { datetime: 1 } }
-            ],
-            as: 'values'
-          }
-        },
-        { $unwind: '$values' },
-        { $replaceRoot: { newRoot: '$values' } }
-      ]);
-      
-      return results.map(formatDocumentForGraphQL);
-    }
+      if (!groups.length) return [];
+
+      return await Promise.all(
+        groups.map(async (group) => {
+          const categories = await EnergyCategory.aggregate([
+            { $match: { groupId: group._id } },
+            {
+              $lookup: {
+                from: "energyValues",
+                let: { categoryId: "$_id" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: { $eq: ["$categoryId", "$$categoryId"] },
+                      ...(args.from || args.to ? { datetime: dateFilter } : {}),
+                    },
+                  },
+
+                  { $sort: { datetime: 1 } },
+                ],
+                as: "values",
+              },
+            },
+            {
+              $addFields: {
+                totalValue: { $sum: "$values.value" },
+                totalPercentage: { $sum: "$values.percentage" },
+              },
+            },
+          ]);
+
+          const { totalValue, totalPercentage } = categories.reduce(
+            (acc, item) => {
+              acc.totalPercentage += item.totalPercentage;
+              acc.totalValue += item.totalValue;
+              return acc;
+            },
+            { totalPercentage: 0, totalValue: 0 }
+          );
+
+          return {
+            group: {
+              id: group._id,
+              type: group.type,
+              lastUpdate: group.lastUpdate,
+              totalValue,
+              totalPercentage,
+            },
+            categories: categories.map(({ values, ...rest }) => ({
+              category: rest,
+              values: values.map((v: any) => ({
+                ...v,
+                datetime: v.datetime ? new Date(v.datetime).toISOString() : null,
+              })),
+            })),
+          };
+        })
+      );
+    },
   },
 
   EnergyGroup: {
-    categories: async (parent, _, { db }) => {
-      const categories = await EnergyCategory.find({ groupId: parent.id || parent._id }).lean();
+    categories: async (parent, args: { from?: string; to?: string }) => {
+      const matchStage: any = { groupId: parent.id || parent._id };
+
+      const dateFilter: any = {};
+      if (args.from) dateFilter.$gte = new Date(args.from);
+      if (args.to) dateFilter.$lte = new Date(args.to);
+
+      const pipeline: any[] = [
+        { $match: matchStage },
+        {
+          $lookup: {
+            from: "energyValues",
+            let: { categoryId: "$_id" },
+            pipeline: [
+              { $match: { $expr: { $eq: ["$categoryId", "$$categoryId"] } } },
+              ...(args.from || args.to
+                ? [{ $match: { datetime: dateFilter } }]
+                : []),
+              { $sort: { datetime: 1 } },
+            ],
+            as: "values",
+          },
+        },
+      ];
+
+      const categories = await EnergyCategory.aggregate(pipeline);
       return categories.map(formatDocumentForGraphQL);
-    }
+    },
   },
 
   EnergyCategory: {
-    values: async (parent, _, { db }) => {
-      const values = await EnergyValue.find({ categoryId: parent.id || parent._id }).sort({ datetime: 1 }).lean();
+    values: async (parent, args: { from?: string; to?: string }, { db }) => {
+      const filter: any = {
+        categoryId: parent.id || parent._id,
+      };
+
+      if (args.from || args.to) {
+        filter.datetime = {};
+        if (args.from) filter.datetime.$gte = new Date(args.from);
+        if (args.to) filter.datetime.$lte = new Date(args.to);
+      }
+
+      const values = await EnergyValue.find(filter)
+        .sort({ datetime: 1 })
+        .lean();
       return values.map(formatDocumentForGraphQL);
-    }
-  }
+    },
+  },
 };

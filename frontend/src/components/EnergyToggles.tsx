@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, Dispatch, SetStateAction } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -17,23 +17,27 @@ type EnergyGroup = {
 
 interface EnergyTogglesProps {
   exclusiveMode?: boolean;
+  activeGroups: Record<string, boolean>;
+  setActiveGroups: Dispatch<SetStateAction<Record<string, boolean>>>;
 }
 
-const EnergyToggles = ({ exclusiveMode = false }: EnergyTogglesProps) => {
+const EnergyToggles = ({
+  activeGroups,
+  setActiveGroups,
+  exclusiveMode = false,
+}: EnergyTogglesProps) => {
   const { loading, error, data, refetch } = useQuery(ALL_ENERGY_GROUPS, {
     errorPolicy: "all",
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   });
 
-  const [activeGroups, setActiveGroups] = useState<Record<string, boolean>>({});
-
   useEffect(() => {
     if (data?.energyGroups && data.energyGroups.length > 0) {
       if (exclusiveMode) {
         const initialActive = data.energyGroups.reduce(
           (acc: Record<string, boolean>, group: EnergyGroup, index: number) => {
-            acc[group.id] = index === 0; 
+            acc[group.id] = index === 0;
             return acc;
           },
           {}
@@ -50,7 +54,7 @@ const EnergyToggles = ({ exclusiveMode = false }: EnergyTogglesProps) => {
         setActiveGroups(initialActive);
       }
     }
-  }, [data, exclusiveMode]);
+  }, [data, exclusiveMode, setActiveGroups]);
 
   const handleToggle = (id: string) => {
     if (exclusiveMode) {

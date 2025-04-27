@@ -1,13 +1,17 @@
-import { useState } from "react";
 import DatePicker from "react-datepicker";
 import { es } from "date-fns/locale";
 import { format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import PickerCustomInput from "./PickerCustomInput";
 
-const RangeDatePicker = () => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+type RangeDatePickerProps = {
+  startDate: Date | null;
+  endDate: Date | null;
+  setStartDate: (date: Date | null) => void;
+  setEndDate: (date: Date | null) => void;
+};
+
+const RangeDatePicker = ({ startDate, endDate, setStartDate, setEndDate }: RangeDatePickerProps) => {
 
   const getSummaryText = () => {
     if (!startDate && !endDate) {
@@ -28,10 +32,10 @@ const RangeDatePicker = () => {
   };
 
   return (
-    <div className="mb-6 mx-auto w-48">
-      <div className="rounded-lg p-4">
+    <div className="mb-6 mx-auto w-48 ">
+      <div className="p-4 fixed top-49 max-w-48 bg-gray-100 dark:bg-gray-700 rounded-md   text-gray-500 dark:text-gray-400">
         <div className="mb-4">
-          <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200">
+          <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 ">
             Rango de fechas
           </h3>
         </div>
